@@ -126,7 +126,7 @@ const UserDashboard: React.FC = () => {
             style={headerStyles}
           >
             <div
-              className={`max-w-maxWidth flex mx-auto justify-center items-center gap-2 gradient-mask`}
+              className={`max-w-[600px] flex mx-auto justify-center items-center gap-10 gradient-mask`}
             >
               <div className="flex items-center gap-2">
                 <Button

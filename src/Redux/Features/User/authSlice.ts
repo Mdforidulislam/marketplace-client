@@ -8,14 +8,17 @@ interface AuthState {
   isAuthenticated: boolean;
   userRole: string | null;
   userEmail: string | null;
+  userId: string | null;
   loading: boolean;
   error: string | null;
 }
 
+// Retrieve user data from localStorage if exists
 const initialState: AuthState = {
-  isAuthenticated: !!Cookies.get("accessToken"),
-  userRole: null,
-  userEmail: null,
+  isAuthenticated: !!Cookies.get("accessToken") || !!localStorage.getItem("userId"),
+  userId: localStorage.getItem("userId") || null,
+  userRole: localStorage.getItem("userRole") || null,
+  userEmail: localStorage.getItem("userEmail") || null,
   loading: false,
   error: null,
 };
@@ -28,21 +31,13 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(credentials);
-
       const response = await axios.post(
-        "http://localhost:5000/api/v1/auth",
+        "https://server.megaproxy.us/api/v1/auth",
         credentials,
-        {
-          withCredentials: true, 
-        }
+        { withCredentials: true }
       );
-      
 
-      console.log(response);
-
-      const { accessToken } = response.data.data;
-
+      const { accessToken } = response.data;
       const decoded = decodedToken(accessToken);
 
       // Set access token in cookies
@@ -52,14 +47,20 @@ export const loginUser = createAsyncThunk(
         sameSite: "Strict",
       });
 
+      // Store user data in localStorage
+      localStorage.setItem("userId", decoded.user_Id);
+      localStorage.setItem("userRole", decoded.user_Role);
+      localStorage.setItem("userEmail", decoded.user_Email);
+
       return {
         accessToken,
-        userRole: decoded.user_role,
+        userId: decoded.user_Id,
+        userRole: decoded.user_Role,
         userEmail: decoded.user_Email,
       };
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || "Email or Password didn't match. Please try again."
       );
     }
   }
@@ -71,11 +72,17 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/logOut",
+        "https://server.megaproxy.us/api/v1/logOut",
         {},
         { withCredentials: true }
       );
       Cookies.remove("accessToken");
+      
+      // Clear user data from localStorage on logout
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("userEmail");
+
       return;
     } catch (error: any) {
       return rejectWithValue(
@@ -91,14 +98,11 @@ export const refreshAccessToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/v1/refresh-token",
-        {
-          withCredentials: true,
-        }
+        "https://server.megaproxy.us/api/v1/refresh-token",
+        { withCredentials: true }
       );
 
       const { accessToken } = response.data;
-
       const decoded = decodedToken(accessToken);
 
       // Set new access token in cookies
@@ -110,7 +114,8 @@ export const refreshAccessToken = createAsyncThunk(
 
       return {
         accessToken,
-        userRole: decoded.user_role,
+        userId: decoded.user_Id,
+        userRole: decoded.user_Role,
         userEmail: decoded.user_Email,
       };
     } catch (error: any) {
@@ -132,6 +137,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.userRole = null;
       state.userEmail = null;
+      state.userId = null;
+
+      // Clear from localStorage on logout
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("userEmail");
     },
   },
   extraReducers: (builder) => {
@@ -139,13 +150,14 @@ const authSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = null; 
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isAuthenticated = true;
         state.userRole = action.payload.userRole;
         state.userEmail = action.payload.userEmail;
+        state.userId = action.payload.userId; 
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
@@ -157,22 +169,22 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.userRole = null;
       state.userEmail = null;
+      state.userId = null;
     });
 
     // Refresh Token
     builder
-      .addCase(
-        refreshAccessToken.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.isAuthenticated = true;
-          state.userRole = action.payload.userRole;
-          state.userEmail = action.payload.userEmail;
-        }
-      )
+      .addCase(refreshAccessToken.fulfilled, (state, action: PayloadAction<any>) => {
+        state.isAuthenticated = true;
+        state.userRole = action.payload.userRole;
+        state.userEmail = action.payload.userEmail;
+        state.userId = action.payload.userId;
+      })
       .addCase(refreshAccessToken.rejected, (state) => {
         state.isAuthenticated = false;
         state.userRole = null;
         state.userEmail = null;
+        state.userId = null;
       });
   },
 });

@@ -1,11 +1,10 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
   Descriptions,
   DescriptionsProps,
   Form,
-  Input,
   Rate,
   Spin,
   Tooltip,
@@ -14,77 +13,114 @@ import TextArea from "antd/es/input/TextArea";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../../../Redux/Features/Data/dataSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Redux/hooks/hooks";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import { AiOutlineLike } from "react-icons/ai";
+import { addOrUpdateReview } from "../../../../Redux/Features/DetailPage/Review";
+import axios from "axios";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const { items, loading, error } = useAppSelector((state) => state.data);
+  const { loading: reviewsLoading, error: reviewsError } = useAppSelector(
+    (state) => state.reviews
+  );
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
-  const [isLiked, setIsLiked] = useState(false); // State for like button
-  const [isDisliked, setIsDisliked] = useState(false); // State for dislike button
+  const userId = localStorage.getItem("userId") || null;
+  const item = items.find((item) => item._id === id);
+  // console.log(userId);
+
+  useEffect(() => {
+    if (!item) return;
+    const userLikeData = item.likes.find(
+      (like: { user_Id: string }) => like.user_Id === userId
+    );
+    console.log("userLikeData: ", userLikeData);
+    if (userLikeData) {
+      setIsLiked(userLikeData.isLiked);
+      setIsDisliked(!userLikeData.isLiked);
+    } else {
+      setIsLiked(false);
+      setIsDisliked(false);
+    }
+  }, [id, userId, item]);
+
+  // Handle Like/Unlike Action
+  const handleLike = async () => {
+    setLikeLoading(true);
+
+    try {
+      const newLikeState = !isLiked; 
+      const res = await axios.put("https://server.megaproxy.us/api/v1/like-post", {
+        post: {
+          postId: id,
+          user_Id: userId,
+          isLiked: newLikeState.toString(),
+        },
+      });
+
+      const userLikeData = res.data.data.data.likes.find(
+        (user: { user_Id: string }) => user.user_Id === userId
+      );
+      console.log("on clicking like: ", userLikeData);
+      if (userLikeData) {
+        setIsLiked(userLikeData.isLiked);
+        setIsDisliked(!userLikeData.isLiked);
+      }
+    } catch (error) {
+      console.error("Failed to like/unlike the post:", error);
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
 
-  const item = items.find((item) => item.id === Number(id));
-
-  if (loading) {
-    return <div className="min-h-screen w-full flex justify-center items-center"><Spin size="large" /></div>;
+  if (loading || reviewsLoading) {
+    return <Spin size="large" />;
   }
 
   if (!item) {
     return <div>Item not found</div>;
   }
 
-  if (error) return <Alert message={error} type="error" showIcon />;
+  if (error) {
+    return <Alert message={error} type="error" />;
+  }
 
-  const handleLike = async () => {
-    if (isLiked) {
-      setIsLiked(false);
-      try {
-        await fetch(`/api/unlike/${id}`, { method: "POST" });
-      } catch (error) {
-        console.error("Failed to remove like:", error);
-      }
-    } else {
-      setIsLiked(true); 
-      setIsDisliked(false);
-      try {
-        await fetch(`/api/like/${id}`, { method: "POST" });
-      } catch (error) {
-        console.error("Failed to like the item:", error);
-      }
+  if (reviewsError) {
+    return <Alert message={reviewsError} type="error" />;
+  }
+
+  const onFinish = async (values: { rating: number; description: string }) => {
+    const { rating, description } = values;
+
+    const review = {
+      post: {
+        postId: id!,
+        userId: userId!,
+        rating,
+        description,
+      },
+    };
+
+    console.log("Form submitted with values: ", review);
+    try {
+      const result = await dispatch(addOrUpdateReview(review)).unwrap();
+      console.log("Review added/updated successfully: ", result);
+    } catch (error) {
+      console.error("Failed to add/update review: ", error);
     }
-  };
-
-  const handleDislike = async () => {
-    if (isDisliked) {
-      setIsDisliked(false); 
-      try {
-        await fetch(`/api/undislike/${id}`, { method: "POST" }); 
-      } catch (error) {
-        console.error("Failed to remove dislike:", error);
-      }
-    } else {
-      setIsDisliked(true); 
-      setIsLiked(false); 
-      try {
-        await fetch(`/api/dislike/${id}`, { method: "POST" });
-      } catch (error) {
-        console.error("Failed to dislike the item:", error);
-      }
-    }
-  };
-
-  const onFinish = (values: unknown) => {
-    console.log("Form submitted with values: ", values);
   };
 
   const descriptionItems: DescriptionsProps["items"] = [
     {
-      label: "Uploader",
+      label: "Provider",
       children: item.uploaderName,
     },
     {
@@ -145,8 +181,8 @@ const DetailPage = () => {
   ];
 
   return (
-    <div className="max-w-maxWidth mx-auto px-1 pt-10">
-      <div className="flex flex-col md:flex-row md:p-4 p-1 mb-6">
+    <div className="max-w-maxWidth mx-auto px-1 pt-16">
+      <div className="flex flex-col md:flex-row md:gap-10 md:p-4 p-1 mb-6">
         <div className="flex-1 max-h-96 max-w-96 overflow-hidden">
           <img
             src={item.image}
@@ -166,24 +202,39 @@ const DetailPage = () => {
           <h1 className="text-4xl font-bold mb-2">{item.productName}</h1>
           <p className="text-base text-gray-700">{item.description}</p>
           <div className="flex justify-center items-center gap-2 mt-4">
-            <Tooltip title="Like">
-              <Button
-                className="text-xl font-bold"
-                type={isLiked ? "primary" : "default"} 
-                shape="circle"
-                icon={<AiOutlineLike />}
-                onClick={handleLike}
-              />
-            </Tooltip>
-            <Tooltip title="Dislike">
-              <Button
-                className="text-xl font-bold"
-                type={isDisliked ? "primary" : "default"}
-                shape="circle"
-                icon={<AiOutlineDislike />}
-                onClick={handleDislike}
-              />
-            </Tooltip>
+            {likeLoading ? (
+              <Spin size="small" />
+            ) : isLiked ? (
+              <Tooltip title="Unlike">
+                <Button
+                  className="text-xl font-bold"
+                  type="primary"
+                  shape="circle"
+                  icon={<AiOutlineLike />}
+                  onClick={handleLike} // Toggle like state
+                />
+              </Tooltip>
+            ) : isDisliked ? (
+              <Tooltip title="Like">
+                <Button
+                  className="text-xl font-bold"
+                  type="default"
+                  shape="circle"
+                  icon={<AiOutlineLike />}
+                  onClick={handleLike} // Toggle like state
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip title="Like">
+                <Button
+                  className="text-xl font-bold"
+                  type="default"
+                  shape="circle"
+                  icon={<AiOutlineLike />}
+                  onClick={handleLike} // Toggle like state
+                />
+              </Tooltip>
+            )}
           </div>
         </div>
       </div>
@@ -211,7 +262,9 @@ const DetailPage = () => {
       </div>
 
       <div className="pr-1 mb-20 max-w-96">
-        <h1 className="text-2xl font-bold text-black/70 my-6 pl-1">Add a Review :</h1>
+        <h1 className="text-2xl font-bold text-black/70 my-6 pl-1">
+          Add a Review :
+        </h1>
         <Form
           layout="vertical"
           onFinish={onFinish}
@@ -224,13 +277,6 @@ const DetailPage = () => {
           >
             <Rate />
           </Form.Item>
-          <Form.Item
-            label="Your Name"
-            name="userName"
-            rules={[{ required: true, message: "Please enter your name" }]}
-          >
-            <Input placeholder="Enter your name" />
-          </Form.Item>
 
           <Form.Item
             label="Review Description"
@@ -241,7 +287,7 @@ const DetailPage = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button loading={reviewsLoading} type="primary" htmlType="submit">
               Submit Review
             </Button>
           </Form.Item>

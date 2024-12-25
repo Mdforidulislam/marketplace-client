@@ -8,8 +8,9 @@ import {
   SkypeOutlined,
   LockOutlined,
   PlusOutlined,
+  WhatsAppOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import {
@@ -31,7 +32,7 @@ const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [customLoading, customSetLoading] = useState(false);
   const dispatch: AppDispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleCustomRequest: UploadProps["customRequest"] = async ({
     file,
@@ -93,11 +94,10 @@ const SignUp: React.FC = () => {
   const onFinish = async (values: FormValues) => {
     dispatch(setLoading(true));
     customSetLoading(true);
-    // console.log(values);
   
     try {
-      dispatch(registerUser(values));
-      
+      await dispatch(registerUser(values)).unwrap();
+      navigate("/login");
     } catch (error) {
       dispatch(setError("Registration failed. Please try again later."));
       console.error("Registration error:", error);
@@ -106,6 +106,7 @@ const SignUp: React.FC = () => {
       dispatch(setLoading(false));
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center w-full h-screen p-4 bg-gray-100">
@@ -188,6 +189,12 @@ const SignUp: React.FC = () => {
         >
           <Input prefix={<PhoneOutlined />} placeholder="Phone Number *" />
         </Form.Item>
+        <Form.Item
+          name="user_WhatsApp"
+          rules={[{ required: true, message: "WhatsApp number is required" }]}
+        >
+          <Input prefix={<WhatsAppOutlined />} placeholder="WhatsApp Number*" />
+        </Form.Item>
 
         <Form.Item
           name="user_Facebook"
@@ -245,7 +252,7 @@ const SignUp: React.FC = () => {
         </Form.Item>
 
         <p>
-          Already ave an account?
+          Already have an account?
           <Link to="/login">
             <span className="text-green-600 ml-2">Sign in</span>
           </Link>

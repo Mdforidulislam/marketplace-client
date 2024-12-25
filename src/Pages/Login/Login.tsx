@@ -3,7 +3,7 @@ import { Button, Form, Input } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks/hooks";
 import { clearError, loginUser } from "../../Redux/Features/User/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -12,20 +12,22 @@ const Login: React.FC = () => {
     (state) => state.auth
   );
 
-  // Redirect the user based on role if authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    console.log("isAuthenticated:", isAuthenticated, "userRole:", userRole);
+  }, [isAuthenticated, userRole, navigate]);
+
+  const onFinish = async (values: { user_Email: string; user_Password: string }) => {
+    dispatch(clearError()); 
+    const result = await dispatch(loginUser(values));
+
+    if (loginUser.fulfilled.match(result)) {
+      const { userRole } = result.payload;
       if (userRole === "user") {
         navigate("/user");
       } else if (userRole === "admin") {
         navigate("/admin");
       }
     }
-  }, [isAuthenticated, userRole, navigate]);
-
-  const onFinish = (values: { user_Email: string; user_Password: string }) => {
-    dispatch(clearError());
-    dispatch(loginUser(values));
   };
 
   return (
@@ -80,6 +82,12 @@ const Login: React.FC = () => {
             Login
           </Button>
         </Form.Item>
+        <p>
+          Don't have an account?
+          <Link to="/singup">
+            <span className="text-green-600 ml-2">Sign Up</span>
+          </Link>
+        </p>
       </Form>
     </div>
   );
