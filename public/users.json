@@ -1,0 +1,123 @@
+[
+    {
+      "name": "Luke Skywalker",
+      "email": "luke@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Darth Vader",
+      "email": "vader@swapi.com",
+      "status": "unverified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Leia Organa",
+      "email": "leia@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Han Solo",
+      "email": "han@swapi.com",
+      "status": "unverified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Chewbacca",
+      "email": "chewie@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "C-3PO",
+      "email": "c3po@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "R2-D2",
+      "email": "r2d2@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Obi-Wan Kenobi",
+      "email": "obiwan@swapi.com",
+      "status": "unverified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Yoda",
+      "email": "yoda@swapi.com",
+      "status": "unverified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "name": "Boba Fett",
+      "email": "boba@swapi.com",
+      "status": "verified",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+        "name": "Boba Fett",
+        "email": "boba@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Darth Vader",
+        "email": "vader@swapi.com",
+        "status": "unverified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Leia Organa",
+        "email": "leia@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Han Solo",
+        "email": "han@swapi.com",
+        "status": "unverified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Chewbacca",
+        "email": "chewie@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "C-3PO",
+        "email": "c3po@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "R2-D2",
+        "email": "r2d2@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Obi-Wan Kenobi",
+        "email": "obiwan@swapi.com",
+        "status": "unverified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Yoda",
+        "email": "yoda@swapi.com",
+        "status": "unverified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      },
+      {
+        "name": "Boba Fett",
+        "email": "boba@swapi.com",
+        "status": "verified",
+        "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+      }
+  ]
+  

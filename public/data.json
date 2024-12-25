@@ -1,0 +1,204 @@
+[
+  {
+    "id": 1,
+    "like": 150,
+    "unlike": 40,
+    "image": "https://i.ibb.co/zrCDdx4/pngwing.png",
+    "description": "Buy high-quality email accounts with secure delivery for enhanced marketing opportunities. These accounts come with an established reputation for better email performance and business credibility.",
+    "productName": "Premium Email Accounts",
+    "uploaderName": "Adeel",
+    "category": "Email",
+    "phone": "01987654321",
+    "whatsApp": "01987654322",
+    "address": "Bashundhara R/A, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "reviews": [
+      {
+        "userName": "John Doe",
+        "rating": 4,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Jane Smith",
+        "rating": 5,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "Samiul Hasan",
+        "rating": 5,
+        "description": "Excellent experience, the email account came with all the features I needed for my startup."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "image": "https://i.pinimg.com/736x/6c/f9/7c/6cf97c7ff3ec97f210c75a79a79357a6.jpg",
+    "description": "Get reliable text services with a variety of options for communication, helping your business establish solid relationships and customer engagement through trusted mediums.",
+    "productName": "Text Communication Services",
+    "uploaderName": "Ravi",
+    "category": "Text",
+    "phone": "01876543210",
+    "whatsApp": "01876543211",
+    "address": "Shyamoli, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "like": 180,
+    "unlike": 45,
+    "reviews": [
+      {
+        "userName": "Jane Smith",
+        "rating": 3,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "John Doe",
+        "rating": 5,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Rohit Kumar",
+        "rating": 4,
+        "description": "Good service, would recommend it to others looking for affordable communication solutions."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "image": "https://i.pinimg.com/736x/f3/80/22/f380227119a91e6973fe734bd9a141be.jpg",
+    "description": "Buy VPN services for secure and private browsing. These VPNs offer anonymous internet access, helping you protect your data and maintain privacy online.",
+    "productName": "Secure VPN Services",
+    "uploaderName": "Sara",
+    "category": "VPN",
+    "phone": "01698765432",
+    "whatsApp": "01698765433",
+    "address": "Banani, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "like": 250,
+    "unlike": 55,
+    "reviews": [
+      {
+        "userName": "John Doe",
+        "rating": 5,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Jane Smith",
+        "rating": 4,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "Adam Johnson",
+        "rating": 4,
+        "description": "VPN works as advertised, safe and secure browsing."
+      },
+      {
+        "userName": "Hassan Ali",
+        "rating": 5,
+        "description": "Fast and reliable VPN service. Highly satisfied with the performance!"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "image": "https://i.pinimg.com/736x/a6/c0/2e/a6c02ea12dc0f637cde111aa63c003b0.jpg",
+    "description": "Boost your internet speed with reliable proxy services. These proxies allow safe and anonymous browsing while offering stable connections for accessing restricted content.",
+    "productName": "Premium Proxy Services",
+    "uploaderName": "Noor",
+    "category": "Proxy",
+    "phone": "01598765432",
+    "whatsApp": "01598765433",
+    "address": "Mohakhali, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "like": 290,
+    "unlike": 60,
+    "reviews": [
+      {
+        "userName": "John Doe",
+        "rating": 5,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Jane Smith",
+        "rating": 4,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "Tariq Ahmed",
+        "rating": 5,
+        "description": "Proxy services were perfect for my browsing needs. Stable and fast connection."
+      },
+      {
+        "userName": "Mehedi Hasan",
+        "rating": 4,
+        "description": "Good quality proxies, definitely worth the price."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "image": "https://i.pinimg.com/736x/15/44/f1/1544f15dc6fdb2c63a92bfe7577f4bf5.jpg",
+    "description": "Access VPS bank services with enhanced security, offering safe and fast transactions for your financial needs. Ideal for businesses looking to manage their finances online.",
+    "productName": "VPS Bank Services",
+    "uploaderName": "Ali",
+    "category": "VPS BANK",
+    "phone": "01387654321",
+    "whatsApp": "01387654322",
+    "address": "Mirpur, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "like": 360,
+    "unlike": 80,
+    "reviews": [
+      {
+        "userName": "John Doe",
+        "rating": 5,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Jane Smith",
+        "rating": 3,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "Shakib Al Hasan",
+        "rating": 5,
+        "description": "Best VPS bank services available. Fast and secure transactions, a must-have for financial transactions."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "image": "https://i.pinimg.com/736x/15/44/f1/1544f15dc6fdb2c63a92bfe7577f4bf5.jpg",
+    "description": "P2P SSN services are designed to help you purchase and exchange social security numbers safely and efficiently for various uses.",
+    "productName": "SSN P2P Exchange Services",
+    "uploaderName": "Farhan",
+    "category": "SSN P2P",
+    "phone": "01987654321",
+    "whatsApp": "01987654322",
+    "address": "Gulshan, Dhaka",
+    "telegram": "https://telegram.org/",
+    "facebook": "https://www.facebook.com/",
+    "like": 220,
+    "unlike": 55,
+    "reviews": [
+      {
+        "userName": "John Doe",
+        "rating": 4,
+        "description": "Great service! The Gmail account was really helpful for my business. Highly recommended."
+      },
+      {
+        "userName": "Jane Smith",
+        "rating": 5,
+        "description": "I am happy with the purchase, smooth transaction and excellent support."
+      },
+      {
+        "userName": "Raza Ahmed",
+        "rating": 4,
+        "description": "The P2P SSN service is convenient and fast. Great for business needs."
+      }
+    ]
+  }
+]
