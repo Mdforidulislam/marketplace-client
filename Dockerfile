@@ -1,18 +1,23 @@
-# Update Node.js version to a newer one that supports modern syntax
-FROM node:18
+# Use Node.js as the base image
+FROM node:18-alpine
 
-# Set working directory (e.g., /app or /src)
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy all other frontend source files
+# Copy the rest of the application code
 COPY . .
 
-# Expose the port on which the frontend runs
-EXPOSE 5173
+# Build the application
+RUN npm run build
 
-# Start the frontend app
-CMD ["npm", "start"]
+# Expose the port for the app
+EXPOSE 4173
+
+# Start the application in preview mode
+CMD ["npm", "run", "preview"]
