@@ -40,14 +40,14 @@ const initialState: RegisterState = {
 export const registerUser = createAsyncThunk(
   "register/registerUser",
   async (formData: RegisterState["user"], { rejectWithValue }) => {
-    console.log({user:formData});
+    // console.log({user:formData});
     
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/create-user",
+        "https://server.megaproxy.us/api/v1/create-user",
         {user:formData}
       );
-      console.log(response.data);
+      // console.log(response.data);
       
       return response.data;
     } catch (error: any) {
@@ -89,7 +89,6 @@ const registerSlice = createSlice({
       state.error = action.payload;
     },
   },
-  
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {

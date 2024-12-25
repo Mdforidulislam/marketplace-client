@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface DataItem {
+  likes: any;
+  _id: string;
   id: number;
   image: string;
   description: string;
@@ -9,7 +12,7 @@ interface DataItem {
   unlike: number;
   productName: string;
   uploaderName: string;
-  category: string
+  category: string;
   phone: string;
   whatsApp: string;
   address: string;
@@ -41,7 +44,8 @@ const initialState: DataState = {
 export const fetchData = createAsyncThunk<DataItem[]>(
   "data/fetchData",
   async () => {
-    const response = await axios.get("http://localhost:5000/api/v1/get-post");
+    const response = await axios.get("https://server.megaproxy.us/api/v1/get-all-post");
+    // console.log("response: ", response.data.data.data);
     return response.data.data.data;
   }
 );

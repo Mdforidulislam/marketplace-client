@@ -4,6 +4,8 @@ import authReducer from "../Features/User/authSlice";
 import dataReducer from "../Features/Data/dataSlice";
 import tabReducer from "../Features/Tabs/SelectedtabSlice";
 import registerReducer from "../Features/User/RegisterSlice";
+import addPostReducer from "../Features/addPost/addPostSlice";
+import reviewReducer from "../Features/DetailPage/Review";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     data: dataReducer,
     tab: tabReducer,
     register: registerReducer,
+    addPost: addPostReducer,
+    reviews: reviewReducer,
   },
   middleware: (getdefaultMiddleware) => getdefaultMiddleware(),
 });
