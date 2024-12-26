@@ -44,7 +44,7 @@ export const registerUser = createAsyncThunk(
     
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/create-user",
+        "https://server.megaproxy.us/api/v1/create-user",
         {user:formData}
       );
       // console.log(response.data);
