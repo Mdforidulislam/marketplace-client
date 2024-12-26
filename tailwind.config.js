@@ -13,7 +13,7 @@ export default {
         globalPadding: '3.125vw',
       },
       maxWidth: {
-        maxWidth: '1440px',
+        maxWidth: '1040px',
       },
     },
   },

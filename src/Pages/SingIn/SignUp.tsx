@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Upload, UploadFile, UploadProps } from "antd";
+import { Button, Form, Input, Spin, Upload, UploadFile, UploadProps } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -31,6 +31,7 @@ const SignUp: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
   const [customLoading, customSetLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,6 +40,7 @@ const SignUp: React.FC = () => {
     onSuccess,
     onError,
   }) => {
+    setUploadingImage(true);
     const uploadData = new FormData();
     uploadData.append("image", file as Blob);
 
@@ -71,6 +73,8 @@ const SignUp: React.FC = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
       onError?.(error as Error);
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -94,7 +98,7 @@ const SignUp: React.FC = () => {
   const onFinish = async (values: FormValues) => {
     dispatch(setLoading(true));
     customSetLoading(true);
-  
+
     try {
       await dispatch(registerUser(values)).unwrap();
       navigate("/login");
@@ -106,7 +110,6 @@ const SignUp: React.FC = () => {
       dispatch(setLoading(false));
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center w-full h-screen p-4 bg-gray-100">
@@ -244,10 +247,9 @@ const SignUp: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
-            loading={customLoading} 
-            style={{ width: "100%", fontWeight: "bold" }}
+            disabled={uploadingImage || customLoading}
           >
-            Submit
+            {uploadingImage ? <Spin size="small" /> : "Submit"}
           </Button>
         </Form.Item>
 

@@ -89,7 +89,7 @@ const AdminDashboard: React.FC = () => {
       </div>
       <Layout style={{ marginTop: appPost ? 70 : undefined }}>
         <Content
-          className={`max-w-maxWidth mx-auto px-2`}
+          className={`max-w-[1240px] mx-auto px-2`}
           style={{
             minHeight: "100vh",
           }}
