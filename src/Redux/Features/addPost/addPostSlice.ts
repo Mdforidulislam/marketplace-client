@@ -19,7 +19,7 @@ export const addPost = createAsyncThunk(
     'post/addPost',
     async (postData: { post: { author_id: string; productName: string; description: string; category: string; image: string | null } }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/create-post', postData);
+      const response = await axios.post('https://server.megaproxy.us/api/v1/create-post', postData);
       console.log(response.data.data);
       return response.data.data;
     } catch (error: any) {

@@ -60,7 +60,7 @@ const DetailPage = () => {
 
     try {
       const newLikeState = !isLiked;
-      const res = await axios.put("http://localhost:5000/api/v1/like-post", {
+      const res = await axios.put("https://server.megaproxy.us/api/v1/like-post", {
         post: {
           postId: id,
           user_Id: userId,

@@ -55,7 +55,7 @@ export const fetchPostDetails = createAsyncThunk(
   async (postId: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/get-single-post`,
+        `https://server.megaproxy.us/api/v1/get-single-post`,
         {
           params: { id: postId }, 
         }
