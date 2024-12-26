@@ -44,7 +44,7 @@ const initialState: DataState = {
 export const fetchData = createAsyncThunk<DataItem[]>(
   "data/fetchData",
   async () => {
-    const response = await axios.get("https://server.megaproxy.us/api/v1/get-all-post");
+    const response = await axios.get("http://localhost:5000/api/v1/get-all-post");
     // console.log("response: ", response.data.data.data);
     return response.data.data.data;
   }

@@ -19,6 +19,7 @@ const formItemLayout = {
 const AddPost = () => {
   const [tabs, setTabs] = useState<{ id: number; name: string }[]>([]);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [form] = Form.useForm();
   const { userId } = useAppSelector((state) => state.auth);
   const { loading, success } = useAppSelector((state) => state.addPost);
@@ -44,7 +45,7 @@ const AddPost = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full flex justify-center items-center">
+      <div className="flex justify-center items-center min-h-screen w-full">
         <Spin size="large" />
       </div>
     );
@@ -55,6 +56,7 @@ const AddPost = () => {
     onSuccess,
     onError,
   }) => {
+    setUploadingImage(true);
     const uploadData = new FormData();
     uploadData.append("image", file as Blob);
 
@@ -88,6 +90,8 @@ const AddPost = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
       onError?.(error as Error);
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -126,7 +130,7 @@ const AddPost = () => {
   };
 
   return (
-    <div className="max-w-maxWidth mx-auto">
+    <div className="max-w-[1240px] mx-auto">
       <h1 className="my-10 text-4xl md:text-6xl text-center font-bold">
         Post Product
       </h1>
@@ -212,8 +216,12 @@ const AddPost = () => {
 
         <Form.Item className="w-full flex justify-start md:min-w-[500px] max-w-72">
           <Space>
-            <Button type="primary" htmlType="submit">
-              Submit
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={uploadingImage || loading}
+            >
+              {uploadingImage ? <Spin size="small" /> : "Submit"}
             </Button>
             <Button htmlType="button" onClick={handleReset}>
               Reset

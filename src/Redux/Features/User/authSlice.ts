@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        "https://server.megaproxy.us/api/v1/auth",
+        "http://localhost:5000/api/v1/auth",
         credentials,
         { withCredentials: true }
       );
@@ -72,7 +72,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axios.post(
-        "https://server.megaproxy.us/api/v1/logOut",
+        "http://localhost:5000/api/v1/logOut",
         {},
         { withCredentials: true }
       );
@@ -98,7 +98,7 @@ export const refreshAccessToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "https://server.megaproxy.us/api/v1/refresh-token",
+        "http://localhost:5000/api/v1/refresh-token",
         { withCredentials: true }
       );
 

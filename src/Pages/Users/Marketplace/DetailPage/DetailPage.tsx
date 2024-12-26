@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "../../../../Redux/hooks/hooks";
 import { AiOutlineLike } from "react-icons/ai";
 import { addOrUpdateReview } from "../../../../Redux/Features/DetailPage/Review";
 import axios from "axios";
+import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPageSlice";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,20 +25,26 @@ const DetailPage = () => {
   const { loading: reviewsLoading, error: reviewsError } = useAppSelector(
     (state) => state.reviews
   );
+  // loading: detailsLoading, error: detailsError
+  const { postData, userData } = useAppSelector((state) => state.detailPage);
+  // console.log("Post Data: ", postData);
+  // console.log("User Data: ", userData);
+
   const [likeLoading, setLikeLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
 
   const userId = localStorage.getItem("userId") || null;
   const item = items.find((item) => item._id === id);
-  // console.log(userId);
+  console.log(item);
 
+  // This useEffect is to handle like
   useEffect(() => {
     if (!item) return;
     const userLikeData = item.likes.find(
       (like: { user_Id: string }) => like.user_Id === userId
     );
-    console.log("userLikeData: ", userLikeData);
+    // console.log("userLikeData: ", userLikeData);
     if (userLikeData) {
       setIsLiked(userLikeData.isLiked);
       setIsDisliked(!userLikeData.isLiked);
@@ -52,8 +59,8 @@ const DetailPage = () => {
     setLikeLoading(true);
 
     try {
-      const newLikeState = !isLiked; 
-      const res = await axios.put("https://server.megaproxy.us/api/v1/like-post", {
+      const newLikeState = !isLiked;
+      const res = await axios.put("http://localhost:5000/api/v1/like-post", {
         post: {
           postId: id,
           user_Id: userId,
@@ -64,7 +71,7 @@ const DetailPage = () => {
       const userLikeData = res.data.data.data.likes.find(
         (user: { user_Id: string }) => user.user_Id === userId
       );
-      console.log("on clicking like: ", userLikeData);
+      // console.log("on clicking like: ", userLikeData);
       if (userLikeData) {
         setIsLiked(userLikeData.isLiked);
         setIsDisliked(!userLikeData.isLiked);
@@ -76,13 +83,18 @@ const DetailPage = () => {
     }
   };
 
-
+  const postId = id!;
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch]);
+    dispatch(fetchPostDetails(postId));
+  }, [dispatch, postId]);
 
   if (loading || reviewsLoading) {
-    return <Spin size="large" />;
+    return (
+      <div className="flex justify-center items-center min-h-screen w-full">
+        <Spin size="large" />
+      </div>
+    )
   }
 
   if (!item) {
@@ -104,6 +116,7 @@ const DetailPage = () => {
       post: {
         postId: id!,
         userId: userId!,
+        user_Name: userData?.user_Name || "",
         rating,
         description,
       },
@@ -121,21 +134,21 @@ const DetailPage = () => {
   const descriptionItems: DescriptionsProps["items"] = [
     {
       label: "Provider",
-      children: item.uploaderName,
+      children: userData?.user_Name,
     },
     {
       label: "Phone",
-      children: item.phone,
+      children: userData?.user_PhoneNumber,
     },
     {
       label: "Address",
-      children: item.address,
+      children: userData?.user_Address,
     },
     {
       label: "Facebook",
       children: (
         <a
-          href={item.facebook}
+          href={userData?.user_Facebook}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 w-1/4"
@@ -148,7 +161,7 @@ const DetailPage = () => {
       label: "Telegram",
       children: (
         <a
-          href={item.telegram}
+          href={userData?.user_Telegram}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 w-1/4"
@@ -161,7 +174,7 @@ const DetailPage = () => {
       label: "WhatsApp",
       children: (
         <a
-          href={`https://wa.me/${item.whatsApp}`}
+          href={`https://wa.me/${userData?.user_WhatsApp}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 w-1/4"
@@ -172,21 +185,17 @@ const DetailPage = () => {
     },
     {
       label: "Likes",
-      children: item.like,
-    },
-    {
-      label: "Unlikes",
-      children: item.unlike,
+      children: postData?.likesCount,
     },
   ];
 
   return (
-    <div className="max-w-maxWidth mx-auto px-1 pt-16">
+    <div className="max-w-[1240px] mx-auto px-1 pt-16">
       <div className="flex flex-col md:flex-row md:gap-10 md:p-4 p-1 mb-6">
         <div className="flex-1 max-h-96 max-w-96 overflow-hidden">
           <img
-            src={item.image}
-            alt={item.productName}
+            src={postData?.image}
+            alt={postData?.productName}
             className="w-full h-full object-contain"
           />
         </div>
@@ -199,8 +208,8 @@ const DetailPage = () => {
           >
             {item.category}
           </Button>
-          <h1 className="text-4xl font-bold mb-2">{item.productName}</h1>
-          <p className="text-base text-gray-700">{item.description}</p>
+          <h1 className="text-4xl font-bold mb-2">{postData?.productName}</h1>
+          <p className="text-base text-gray-700">{postData?.description}</p>
           <div className="flex justify-center items-center gap-2 mt-4">
             {likeLoading ? (
               <Spin size="small" />
@@ -243,7 +252,11 @@ const DetailPage = () => {
         <h1 className="text-2xl font-bold text-black/70 my-6">
           Service provider information :
         </h1>
-        <Descriptions bordered items={descriptionItems} />
+        <Descriptions
+          className="tableData tracking-wide"
+          bordered
+          items={descriptionItems}
+        />
       </div>
 
       <div className="pr-1 mb-20">
@@ -251,11 +264,15 @@ const DetailPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {item?.reviews.map((review, index) => (
             <div key={index} className="p-4 border rounded-md">
-              <div className="font-semibold mb-1">{review.userName}</div>
-              <Form.Item label="Rate">
+              <div className="font-semibold text-base mb-1">
+                {review.userName}
+              </div>
+              <Form.Item className="font-bold text-base" label="Rate">
                 <Rate className="pointer-events-none" value={review?.rating} />
               </Form.Item>
-              <div className="-mt-7">{review.description}</div>
+              <div className="font-medium text-black/60 text-base -mt-7">
+                {review.description}
+              </div>
             </div>
           ))}
         </div>
@@ -268,9 +285,10 @@ const DetailPage = () => {
         <Form
           layout="vertical"
           onFinish={onFinish}
-          className="space-y-4 border font-medium rounded-md py-4 md:px-4 px-1"
+          className="space-y-4 border font-medium text-black/60 text-base rounded-md py-4 md:px-4 px-1"
         >
           <Form.Item
+            className="font-medium text-black/60 text-base"
             label="Rating"
             name="rating"
             rules={[{ required: true, message: "Please choose stars" }]}
@@ -281,6 +299,7 @@ const DetailPage = () => {
           <Form.Item
             label="Review Description"
             name="description"
+            className="font-medium text-black/60 text-lg"
             rules={[{ required: true, message: "Please enter a review" }]}
           >
             <TextArea rows={4} placeholder="Enter your review here" />

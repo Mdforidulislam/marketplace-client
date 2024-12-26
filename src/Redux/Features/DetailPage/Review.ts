@@ -36,7 +36,7 @@ export const addOrUpdateReview = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        'https://server.megaproxy.us/api/v1//like-post',
+        'http://localhost:5000/api/v1/comment-post',
         reviewData 
       );
       return response.data.data;

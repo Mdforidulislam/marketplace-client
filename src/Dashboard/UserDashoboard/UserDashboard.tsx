@@ -72,7 +72,7 @@ const UserDashboard: React.FC = () => {
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 z-50 h-full transition-all duration-300 ease-in-out ${
-          sidebarOpen ? "w-60" : "w-0"
+          sidebarOpen ? "w-56" : "w-0"
         } bg-white text-black`}
       >
         <HamburgerButton
@@ -122,7 +122,7 @@ const UserDashboard: React.FC = () => {
       <Layout style={{ marginTop: appPost ? 70 : undefined }}>
         {appPost && (
           <Header
-            className="fixed top-0 pl-24 overflow-hidden"
+            className="fixed top-0 pl-0 overflow-hidden"
             style={headerStyles}
           >
             <div
@@ -147,7 +147,7 @@ const UserDashboard: React.FC = () => {
 
               <div
                 ref={menuRef}
-                className="flex md:ml-0 pl-[38%] pr-[40%] md:px-0 md:pr-32 overflow-x-auto items-center no-scrollbar gap-4"
+                className="flex md:ml-0 pl-[32%] pr-[40%]  md:px-0 md:pr-32 overflow-x-auto items-center no-scrollbar gap-4"
                 style={{
                   flexGrow: 1,
                   whiteSpace: "nowrap",
@@ -169,7 +169,7 @@ const UserDashboard: React.FC = () => {
           </Header>
         )}
         <Content
-          className={`max-w-maxWidth mx-auto px-2`}
+          className={`max-w-[1240px] mx-auto px-2`}
           style={{
             minHeight: "100vh",
           }}
