@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 interface Review {
   postId: string;
@@ -13,7 +13,7 @@ interface Review {
 const initialState: {
   reviews: Review[];
   loading: boolean;
-  error: string | null; 
+  error: string | null;
 } = {
   reviews: [],
   loading: false,
@@ -22,7 +22,7 @@ const initialState: {
 
 // Async thunk to add or update a comment
 export const addOrUpdateReview = createAsyncThunk(
-  'reviews/addOrUpdateReview',
+  "reviews/addOrUpdateReview",
   async (
     reviewData: {
       post: {
@@ -36,8 +36,8 @@ export const addOrUpdateReview = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        'https://server.megaproxy.us/api/v1/comment-post',
-        reviewData 
+        "https://server.megaproxy.us/api/v1/comment-post",
+        reviewData
       );
       return response.data.data;
     } catch (error: any) {
@@ -46,9 +46,8 @@ export const addOrUpdateReview = createAsyncThunk(
   }
 );
 
-
 const reviewSlice = createSlice({
-  name: 'reviews',
+  name: "reviews",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -60,19 +59,23 @@ const reviewSlice = createSlice({
       .addCase(addOrUpdateReview.fulfilled, (state, action) => {
         state.loading = false;
         const updatedReview = action.payload;
+
         const existingReviewIndex = state.reviews.findIndex(
           (review) => review.postId === updatedReview.postId
         );
 
-        if (existingReviewIndex !== -1) {
+        if (existingReviewIndex >= 0) {
           state.reviews[existingReviewIndex] = updatedReview;
         } else {
+          // Add new review
           state.reviews.push(updatedReview);
         }
       })
+
       .addCase(addOrUpdateReview.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || 'Failed to add or update comment';
+        state.error =
+          (action.payload as string) || "Failed to add or update comment";
       });
   },
 });

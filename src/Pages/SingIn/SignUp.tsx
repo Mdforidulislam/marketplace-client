@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Spin, Upload, UploadFile, UploadProps } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Spin,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -19,6 +27,11 @@ import {
   setLoading,
 } from "../../Redux/Features/User/RegisterSlice";
 import { AppDispatch } from "../../Redux/app/store";
+import { FaTelegramPlane } from "react-icons/fa";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+
+
+
 const validateMessages = {
   required: "${label} is required!",
   types: {
@@ -150,7 +163,7 @@ const SignUp: React.FC = () => {
           name="user_Address"
           rules={[{ required: true, message: "User address is required" }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Your Address *" />
+          <Input prefix={<HiOutlineLocationMarker />} placeholder="Your Address *" />
         </Form.Item>
 
         <Form.Item
@@ -217,7 +230,7 @@ const SignUp: React.FC = () => {
 
         <Form.Item name="user_Telegram">
           <Input
-            prefix={<SkypeOutlined />}
+            prefix={<FaTelegramPlane />}
             placeholder="Telegram Profile url *"
           />
         </Form.Item>

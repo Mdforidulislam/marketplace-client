@@ -21,6 +21,7 @@ interface DataItem {
   facebook: string;
   reviews: [
     {
+      [x: string]: any;
       userName: string;
       rating: number;
       description: string;

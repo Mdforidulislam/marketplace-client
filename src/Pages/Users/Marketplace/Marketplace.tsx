@@ -4,14 +4,18 @@ import { fetchData } from "../../../Redux/Features/Data/dataSlice";
 import { Alert, Card, Empty, Spin } from "antd";
 import Meta from "antd/es/card/Meta";
 import { Link } from "react-router-dom";
+import { refreshAccessToken } from "../../../Redux/Features/User/authSlice";
 
 const Marketplace = () => {
-  const dispatch = useAppDispatch();
   const { selectedTab } = useAppSelector((state) => state.tab);
   const { items, loading, error } = useAppSelector((state) => state.data);
+  const dispatch = useAppDispatch();
+  // const { userRole, userId } = useAppSelector((state) => state.auth);
+  // console.log("userRole:", userRole, "userId:", userId);
 
   useEffect(() => {
     dispatch(fetchData());
+    dispatch(refreshAccessToken());
   }, [dispatch]);
 
   if (loading) {
@@ -40,13 +44,13 @@ const Marketplace = () => {
             hoverable
             cover={
               <img
-                className="max-h-[300px] object-cover"
+                className="h-[250px] object-cover"
                 alt={item?.image}
                 src={item?.image}
               />
             }
           >
-            <div className="flex flex-col gap-4 justify-between items-start">
+            <div className="flex flex-col gap-4 justify-between items-start border-t-[0.5px] border-gray-200/80 pt-4">
               <Link
                 to={`details/${item?._id}`}
                 className="flex justify-center gap-2 items-center mx-auto shadow-lg text-blue-600 text-lg bg-blue-50 backdrop-blur-md lg:font-semibold isolation-auto border-blue-50 before:absolute before:w-full before:transition-all before:duration-600 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-600 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
@@ -68,7 +72,7 @@ const Marketplace = () => {
                 title={item?.productName}
                 description={item?.description}
               />
-              <div className="flex flex-col w-full md:flex-row justify-start items-start md:justify-between mt-4 gap-4">
+              {/* <div className="flex flex-col w-full md:flex-row justify-start items-start md:justify-between mt-4 gap-4">
                 <span className="flex justify-center items-center gap-1">
                   <Meta className="font-bold" description="Likes:" />{" "}
                   <Meta className="font-bold" description={item?.like} />
@@ -77,7 +81,7 @@ const Marketplace = () => {
                   <Meta className="font-bold" description="Unlikes:" />{" "}
                   <Meta className="font-bold" description={item?.unlike} />
                 </span>
-              </div>
+              </div> */}
             </div>
           </Card>
         ))
