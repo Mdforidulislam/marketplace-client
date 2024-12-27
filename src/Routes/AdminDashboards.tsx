@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+
 import Login from "../Pages/Login/Login";
 import ProtectedRouteAdmin from "../PrivetRoutes/ProtectedRoute";
 import UnAuthorized from "../Pages/Unauthorized/UnAuthorized";
@@ -7,10 +7,6 @@ import AllUsers from "../Pages/Admin/AllUsers/AllUsers";
 import SignUp from "../Pages/SingIn/SignUp";
 
 const Adminroutes = [
-  {
-    path: "/",
-    element: <Navigate to="/login" replace={true} />,
-  },
   {
     path: "/login",
     element: <Login />,

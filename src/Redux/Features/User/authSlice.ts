@@ -15,7 +15,8 @@ interface AuthState {
 
 // Retrieve user data from localStorage if exists
 const initialState: AuthState = {
-  isAuthenticated: !!Cookies.get("accessToken") || !!localStorage.getItem("userId"),
+  isAuthenticated:
+    !!Cookies.get("accessToken") || !!localStorage.getItem("userId"),
   userId: localStorage.getItem("userId") || null,
   userRole: localStorage.getItem("userRole") || null,
   userEmail: localStorage.getItem("userEmail") || null,
@@ -31,11 +32,9 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `${apiBaseUrl}/auth`,
-        credentials,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${apiBaseUrl}/auth`, credentials, {
+        withCredentials: true,
+      });
 
       const { accessToken } = response.data;
       const decoded = decodedToken(accessToken);
@@ -60,7 +59,8 @@ export const loginUser = createAsyncThunk(
       };
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message || "Email or Password didn't match. Please try again."
+        error.response?.data?.message ||
+          "Email or Password didn't match. Please try again."
       );
     }
   }
@@ -71,13 +71,17 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      await axios.post(
-        `${apiBaseUrl}/logOut`,
-        {},
-        { withCredentials: true }
-      );
-      Cookies.remove("accessToken");
+      const accessToken = Cookies.get("accessToken");  
+      console.log(accessToken);
       
+      await axios.post(`${apiBaseUrl}/logOut`, {}, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      Cookies.remove("accessToken");
+
       // Clear user data from localStorage on logout
       localStorage.removeItem("userId");
       localStorage.removeItem("userRole");
@@ -92,16 +96,15 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+
 // Async thunk to refresh access token
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshAccessToken",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-       `${apiBaseUrl}/refresh-token`,
-        { withCredentials: true }
-      );
-
+      const response = await axios.get(`${apiBaseUrl}/refresh-token`, {
+        withCredentials: true,
+      });
       const { accessToken } = response.data;
       const decoded = decodedToken(accessToken);
 
@@ -111,7 +114,6 @@ export const refreshAccessToken = createAsyncThunk(
         secure: true,
         sameSite: "Strict",
       });
-      
 
       return {
         accessToken,
@@ -151,14 +153,14 @@ const authSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null; 
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isAuthenticated = true;
         state.userRole = action.payload.userRole;
         state.userEmail = action.payload.userEmail;
-        state.userId = action.payload.userId; 
+        state.userId = action.payload.userId;
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
@@ -175,12 +177,15 @@ const authSlice = createSlice({
 
     // Refresh Token
     builder
-      .addCase(refreshAccessToken.fulfilled, (state, action: PayloadAction<any>) => {
-        state.isAuthenticated = true;
-        state.userRole = action.payload.userRole;
-        state.userEmail = action.payload.userEmail;
-        state.userId = action.payload.userId;
-      })
+      .addCase(
+        refreshAccessToken.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.isAuthenticated = true;
+          state.userRole = action.payload.userRole;
+          state.userEmail = action.payload.userEmail;
+          state.userId = action.payload.userId;
+        }
+      )
       .addCase(refreshAccessToken.rejected, (state) => {
         state.isAuthenticated = false;
         state.userRole = null;

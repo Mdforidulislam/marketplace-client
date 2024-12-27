@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     if (loginUser.fulfilled.match(result)) {
       const { userRole } = result.payload;
       if (userRole === "user") {
-        navigate("/user");
+        navigate("/");
       } else if (userRole === "admin") {
         navigate("/admin");
       }

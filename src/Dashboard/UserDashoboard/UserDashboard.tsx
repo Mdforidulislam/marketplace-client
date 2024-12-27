@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Dropdown, Layout, Space } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Dropdown, Layout, Space, Spin } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks/hooks";
 import { BsShopWindow } from "react-icons/bs";
@@ -7,10 +7,13 @@ import { TbLogout } from "react-icons/tb";
 import { MdLibraryAdd } from "react-icons/md";
 import { headerStyles } from "./userDashboardfunctions";
 import { setSelectedTab } from "../../Redux/Features/Tabs/SelectedtabSlice";
-import { clearAuth } from "../../Redux/Features/User/authSlice";
+import { clearAuth, logoutUser } from "../../Redux/Features/User/authSlice";
 import HamburgerButton from "../AdminDashboard/HamburgerButton";
 import { DownOutlined } from "@ant-design/icons";
 import { fetchCategories } from "../../Redux/Features/Tabs/TabsSlice";
+import { SiMonkeytie } from "react-icons/si";
+
+
 const { Header, Content } = Layout;
 
 const UserDashboard: React.FC = () => {
@@ -19,7 +22,9 @@ const UserDashboard: React.FC = () => {
   const location = useLocation();
   const LogOutDispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const { isAuthenticated, loading, userRole } = useAppSelector(
+    (state) => state.auth
+  );
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector((state) => state.category);
   const { selectedTab } = useAppSelector((state) => state.tab);
@@ -63,7 +68,7 @@ const UserDashboard: React.FC = () => {
     </div>
   );
 
-  const appPost = location.pathname === "/user";
+  const appPost = location.pathname === "/user" || location.pathname === "/";
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,14 +90,15 @@ const UserDashboard: React.FC = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const logOutHandle = async () => {
+  const logOutHandle = useCallback(async () => {
     try {
       LogOutDispatch(clearAuth());
-      navigate("/login");
+      dispatch(logoutUser());
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  };
+  }, [LogOutDispatch, navigate, dispatch]);
 
   const items = tabs.map((item, index) => ({
     label: (
@@ -111,17 +117,110 @@ const UserDashboard: React.FC = () => {
     key: item.id || `tab-${index}`,
   }));
 
+  const sidebarItems = useMemo(() => {
+    if (isAuthenticated) {
+      return [
+        {
+          label: (
+            <Link to="/" className="w-full">
+              <Button
+                color="primary"
+                className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
+                variant="filled"
+              >
+                <BsShopWindow className="" />
+                Marketplace
+              </Button>
+            </Link>
+          ),
+          key: "marketplace",
+        },
+        {
+          label: (
+            <Link to="/add-post" className="w-full">
+              <Button
+                color="primary"
+                className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
+                variant="filled"
+              >
+                <MdLibraryAdd className="" />
+                Add Post
+              </Button>
+            </Link>
+          ),
+          key: "add-post",
+        },
+        {
+          label: (
+            <Button
+              onClick={logOutHandle}
+              color="primary"
+              className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
+              variant="filled"
+            >
+              <TbLogout className="" />
+              Logout
+            </Button>
+          ),
+          key: "logout",
+        },
+      ];
+    } else {
+      return [
+        {
+          label: (
+            <Link to="/" className="w-full">
+              <Button
+                color="primary"
+                className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
+                variant="filled"
+              >
+                <BsShopWindow className="" />
+                Marketplace
+              </Button>
+            </Link>
+          ),
+          key: "marketplace",
+        },
+        {
+          label: (
+            <Link to="/login" className="w-full">
+              <Button
+                color="primary"
+                className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
+                variant="filled"
+              >
+                <SiMonkeytie/>
+                Login
+              </Button>
+            </Link>
+          ),
+          key: "login",
+        },
+      ];
+    }
+  }, [isAuthenticated, logOutHandle]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <Layout hasSider style={{ height: "auto" }}>
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 z-50 h-full transition-all duration-300 ease-in-out ${
-          sidebarOpen ? "w-56" : "w-0"
+          sidebarOpen ? "w-56 px-2.5" : "w-0"
         } bg-white text-black`}
       >
         <HamburgerButton
           sidebarOpen={sidebarOpen}
           toggleSidebar={toggleSidebar}
+          userRole={userRole!}
         />
 
         <div
@@ -129,38 +228,11 @@ const UserDashboard: React.FC = () => {
             sidebarOpen
               ? "opacity-100 transition-opacity delay-200"
               : "opacity-0"
-          } flex flex-col items-center pt-6 px-4 pr-5 space-y-4`}
+          }  pt-6 space-y-4`}
         >
-          <Link to="/user" className="w-full">
-            <Button
-              color="primary"
-              className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
-              variant="filled"
-            >
-              <BsShopWindow className="" />
-              Marketplace
-            </Button>
-          </Link>
-          <Link to="/user/add-post" className="w-full">
-            <Button
-              color="primary"
-              className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
-              variant="filled"
-            >
-              <MdLibraryAdd className="" />
-              Add Post
-            </Button>
-          </Link>
-
-          <Button
-            onClick={logOutHandle}
-            color="primary"
-            className="w-full flex justify-start font-medium items-center gap-2.5 p-4 pl-6 text-lg"
-            variant="filled"
-          >
-            <TbLogout className="" />
-            Logout
-          </Button>
+          {sidebarItems.map((item) => (
+            <div key={item.key}>{item.label}</div>
+          ))}
         </div>
       </div>
       <Layout

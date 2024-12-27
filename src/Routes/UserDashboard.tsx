@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import UserDashboard from "../Dashboard/UserDashoboard/UserDashboard";
 import AddPost from "../Pages/Users/AddPost/AddPost";
 import DetailPage from "../Pages/Users/Marketplace/DetailPage/DetailPage";
@@ -6,7 +7,11 @@ import ProtectedRoute from "../PrivetRoutes/ProtectedRoute";
 
 const UserRoutes = [
   {
-    path: "/user",
+    path: "/",
+    element: <Navigate to="/" replace={true} />,
+  },
+  {
+    path: "/",
     element: (
       <ProtectedRoute>
         <UserDashboard />
