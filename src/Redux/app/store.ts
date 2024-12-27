@@ -7,6 +7,7 @@ import registerReducer from "../Features/User/RegisterSlice";
 import addPostReducer from "../Features/addPost/addPostSlice";
 import reviewReducer from "../Features/DetailPage/Review";
 import detailPageReducer from "../Features/DetailPage/DetailPageSlice";
+import categoryReducer from "../Features/Tabs/TabsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     addPost: addPostReducer,
     reviews: reviewReducer,
     detailPage: detailPageReducer,
+    category: categoryReducer,
   },
   middleware: (getdefaultMiddleware) => getdefaultMiddleware(),
 });

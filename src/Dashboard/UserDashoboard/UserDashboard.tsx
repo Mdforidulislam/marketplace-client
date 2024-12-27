@@ -1,32 +1,67 @@
-import React, { useEffect, useState, useRef } from "react";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Layout } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Dropdown, Layout, Space } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks/hooks";
 import { BsShopWindow } from "react-icons/bs";
 import { TbLogout } from "react-icons/tb";
 import { MdLibraryAdd } from "react-icons/md";
-import {
-  fetchTabs,
-  scrollLeft,
-  scrollRight,
-  headerStyles,
-} from "./userDashboardfunctions";
+import { headerStyles } from "./userDashboardfunctions";
 import { setSelectedTab } from "../../Redux/Features/Tabs/SelectedtabSlice";
 import { clearAuth } from "../../Redux/Features/User/authSlice";
 import HamburgerButton from "../AdminDashboard/HamburgerButton";
-
+import { DownOutlined } from "@ant-design/icons";
+import { fetchCategories } from "../../Redux/Features/Tabs/TabsSlice";
 const { Header, Content } = Layout;
 
 const UserDashboard: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { selectedTab } = useAppSelector((state) => state.tab);
-  const [tabs, setTabs] = useState<{ id: number; name: string }[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const LogOutDispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const { categories } = useAppSelector((state) => state.category);
+  const { selectedTab } = useAppSelector((state) => state.tab);
+  const [tabs, setTabs] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (categories?.length > 0) {
+      const formattedTabs = categories.map((category, index) => ({
+        id: index,
+        name: category.name,
+      }));
+      setTabs(formattedTabs);
+    }
+  }, [categories]);
+
+  const handleTabClick = (category: string) => {
+    dispatch(setSelectedTab(category));
+  };
+
+  const renderTabs = () => (
+    <div
+      className={`max-w-[600px] lg:max-w-[1200px] flex flex-wrap mx-auto justify-center items-center gap-2 py-2`}
+    >
+      {tabs.map((item, index) => (
+        <Button
+          key={item?.id || `tab-${index}`}
+          className={`text-md font-medium border-none ${
+            selectedTab === item.name
+              ? "bg-blue-600 text-white"
+              : "bg-blue-100 text-blue-600 hover:bg-blue-100 hover:text-blue-600"
+          }`}
+          onClick={() => handleTabClick(item.name)}
+        >
+          {item?.name}
+        </Button>
+      ))}
+    </div>
+  );
 
   const appPost = location.pathname === "/user";
 
@@ -46,14 +81,6 @@ const UserDashboard: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    fetchTabs(setTabs);
-  }, []);
-
-  const handleTabClick = (category: string) => {
-    dispatch(setSelectedTab(category));
-  };
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -66,6 +93,23 @@ const UserDashboard: React.FC = () => {
       console.error("Logout failed:", error);
     }
   };
+
+  const items = tabs.map((item, index) => ({
+    label: (
+      <Button
+        className={`w-full text-md font-medium border-none ${
+          selectedTab === item.name
+            ? "bg-blue-600 text-white"
+            : "bg-blue-100 text-blue-600"
+        }`}
+        key={item?.id || `tab-${index}`}
+        onClick={() => handleTabClick(item.name)}
+      >
+        {item.name}
+      </Button>
+    ),
+    key: item.id || `tab-${index}`,
+  }));
 
   return (
     <Layout hasSider style={{ height: "auto" }}>
@@ -119,60 +163,42 @@ const UserDashboard: React.FC = () => {
           </Button>
         </div>
       </div>
-      <Layout style={{ marginTop: appPost ? 70 : undefined }}>
+      <Layout
+        className={`${
+          appPost ? "mt-[20%] lg:mt-[110px]" : "mt-0"
+        } transition-all duration-300 ease-in-out`}
+      >
         {appPost && (
           <Header
-            className="fixed top-0 pl-0 overflow-hidden"
+            className="fixed top-0 pl-0 h-auto overflow-hidden"
             style={headerStyles}
           >
-            <div
-              className={`max-w-[600px] flex mx-auto justify-center items-center gap-10 gradient-mask`}
-            >
-              <div className="flex items-center gap-2">
-                <Button
-                  color="default"
-                  variant="filled"
-                  className="hidden md:flex"
-                  icon={<LeftOutlined />}
-                  onClick={() => scrollLeft(menuRef)}
-                />
-                <Button
-                  color="default"
-                  variant="filled"
-                  className="hidden md:flex"
-                  icon={<RightOutlined />}
-                  onClick={() => scrollRight(menuRef)}
-                />
-              </div>
-
-              <div
-                ref={menuRef}
-                className="flex md:ml-0 pl-[32%] pr-[40%]  md:px-0 md:pr-32 overflow-x-auto items-center no-scrollbar gap-4"
-                style={{
-                  flexGrow: 1,
-                  whiteSpace: "nowrap",
-                  scrollBehavior: "smooth",
-                }}
-              >
-                {tabs.map((item, index) => (
+            <div className="flex justify-between items-center">
+              <div className="hidden md:flex">{renderTabs()}</div>
+              <div className="fixed -top-1 right-2.5 md:hidden">
+                <Dropdown menu={{ items }} trigger={["click"]}>
                   <Button
-                    key={item?.id || `tab-${index}`}
-                    color={selectedTab === item.name ? "primary" : "default"}
-                    variant={selectedTab === item.name ? "solid" : "filled"}
-                    onClick={() => handleTabClick(item.name)}
+                    className="text-md font-medium"
+                    variant="filled"
+                    color="primary"
+                    onClick={(e) => {
+                      setIsDropdownOpen(!isDropdownOpen);
+                      e.preventDefault();
+                    }}
                   >
-                    {item?.name}
+                    <Space>
+                      Categories
+                      <DownOutlined className="text-md font-bold" />
+                    </Space>
                   </Button>
-                ))}
+                </Dropdown>
               </div>
             </div>
           </Header>
         )}
         <Content
           className={`max-w-[1240px] mx-auto px-2`}
-          style={{
-            minHeight: "100vh",
-          }}
+          style={{ minHeight: "100vh" }}
         >
           <Outlet />
         </Content>

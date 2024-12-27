@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import {
   Alert,
+  Avatar,
+  Badge,
   Button,
   Descriptions,
   DescriptionsProps,
@@ -17,84 +19,76 @@ import { AiOutlineLike } from "react-icons/ai";
 import { addOrUpdateReview } from "../../../../Redux/Features/DetailPage/Review";
 import axios from "axios";
 import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPageSlice";
+import { refreshAccessToken } from "../../../../Redux/Features/User/authSlice";
+import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const userId = localStorage.getItem("userId") || null;
   const { items, loading, error } = useAppSelector((state) => state.data);
   const { loading: reviewsLoading, error: reviewsError } = useAppSelector(
     (state) => state.reviews
   );
-  // loading: detailsLoading, error: detailsError
   const { postData, userData } = useAppSelector((state) => state.detailPage);
-  // console.log("Post Data: ", postData);
-  // console.log("User Data: ", userData);
-
   const [likeLoading, setLikeLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
+  console.log("postData", postData);
 
-  const userId = localStorage.getItem("userId") || null;
   const item = items.find((item) => item._id === id);
-  console.log(item);
+  console.log("item", item?.likes);
 
-  // This useEffect is to handle like
+  useEffect(() => {
+    dispatch(refreshAccessToken());
+  }, [dispatch]);
+
   useEffect(() => {
     if (!item) return;
     const userLikeData = item.likes.find(
       (like: { user_Id: string }) => like.user_Id === userId
     );
-    // console.log("userLikeData: ", userLikeData);
+
     if (userLikeData) {
       setIsLiked(userLikeData.isLiked);
-      setIsDisliked(!userLikeData.isLiked);
     } else {
       setIsLiked(false);
-      setIsDisliked(false);
     }
   }, [id, userId, item]);
 
   // Handle Like/Unlike Action
   const handleLike = async () => {
     setLikeLoading(true);
-
+  
     try {
-      const newLikeState = !isLiked;
-      const res = await axios.put("https://server.megaproxy.us/api/v1/like-post", {
+      const newLikeState = !isLiked;  // This toggles the state
+      await axios.put("https://server.megaproxy.us/api/v1/like-post", {
         post: {
           postId: id,
           user_Id: userId,
-          isLiked: newLikeState.toString(),
+          isLiked: newLikeState.toString(),  // Converting to string
         },
       });
-
-      const userLikeData = res.data.data.data.likes.find(
-        (user: { user_Id: string }) => user.user_Id === userId
-      );
-      // console.log("on clicking like: ", userLikeData);
-      if (userLikeData) {
-        setIsLiked(userLikeData.isLiked);
-        setIsDisliked(!userLikeData.isLiked);
-      }
+  
+      setIsLiked(newLikeState);  // Update the frontend state
     } catch (error) {
       console.error("Failed to like/unlike the post:", error);
     } finally {
       setLikeLoading(false);
     }
   };
-
+  
   const postId = id!;
   useEffect(() => {
     dispatch(fetchData());
     dispatch(fetchPostDetails(postId));
-  }, [dispatch, postId]);
+  }, [dispatch, postId, isLiked]);
 
   if (loading || reviewsLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen w-full">
         <Spin size="large" />
       </div>
-    )
+    );
   }
 
   if (!item) {
@@ -126,6 +120,7 @@ const DetailPage = () => {
     try {
       const result = await dispatch(addOrUpdateReview(review)).unwrap();
       console.log("Review added/updated successfully: ", result);
+      dispatch(fetchData());
     } catch (error) {
       console.error("Failed to add/update review: ", error);
     }
@@ -200,7 +195,29 @@ const DetailPage = () => {
           />
         </div>
 
-        <div className="flex-1 flex flex-col gap-2 justify-center items-start md:mt-0 mt-6">
+        <div className="flex-1 flex flex-col space-y-2 gap-2 justify-center items-start md:mt-0 mt-6">
+          <div className="flex items-center justify-center gap-2">
+            <Badge
+              size="default"
+              count={
+                userData?.user_varified ? (
+                  <IoCheckmarkDoneCircleSharp style={{ color: "#5CBA5C" }} />
+                ) : null
+              }
+            >
+              <Avatar shape="circle" src={userData?.user_Image} size="large" />
+            </Badge>
+            <Button
+              className={`${
+                userData?.user_varified
+                  ? "text-[#5CBA5C] bg-[#E1F1E1]"
+                  : "text-[#319bed] bg-[#E6F4FF]"
+              } font-medium border-none pointer-events-none`}
+              variant="filled"
+            >
+              {userData?.user_varified ? "Verified" : "Not Verified"}
+            </Button>
+          </div>
           <Button
             className="pointer-events-none font-medium"
             color="primary"
@@ -208,9 +225,9 @@ const DetailPage = () => {
           >
             {item.category}
           </Button>
-          <h1 className="text-4xl font-bold mb-2">{postData?.productName}</h1>
+          <h1 className="text-4xl font-bold">{postData?.productName}</h1>
           <p className="text-base text-gray-700">{postData?.description}</p>
-          <div className="flex justify-center items-center gap-2 mt-4">
+          <div className="flex justify-center items-center gap-2">
             {likeLoading ? (
               <Spin size="small" />
             ) : isLiked ? (
@@ -220,17 +237,7 @@ const DetailPage = () => {
                   type="primary"
                   shape="circle"
                   icon={<AiOutlineLike />}
-                  onClick={handleLike} // Toggle like state
-                />
-              </Tooltip>
-            ) : isDisliked ? (
-              <Tooltip title="Like">
-                <Button
-                  className="text-xl font-bold"
-                  type="default"
-                  shape="circle"
-                  icon={<AiOutlineLike />}
-                  onClick={handleLike} // Toggle like state
+                  onClick={handleLike}
                 />
               </Tooltip>
             ) : (
@@ -240,7 +247,7 @@ const DetailPage = () => {
                   type="default"
                   shape="circle"
                   icon={<AiOutlineLike />}
-                  onClick={handleLike} // Toggle like state
+                  onClick={handleLike}
                 />
               </Tooltip>
             )}
@@ -253,7 +260,7 @@ const DetailPage = () => {
           Service provider information :
         </h1>
         <Descriptions
-          className="tableData tracking-wide"
+          className="tableData tracking-wide capitalize"
           bordered
           items={descriptionItems}
         />
