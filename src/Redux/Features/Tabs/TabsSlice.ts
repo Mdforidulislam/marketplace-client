@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 
 interface Category {
   id: string;
@@ -16,13 +17,12 @@ const initialState: {
   loading: false,
   error: null,
 };
-
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "https://server.megaproxy.us/api/v1/get-all-categories"
+        `${apiBaseUrl}/get-all-categories`
       );
       return response.data.data;
     } catch (error: any) {
@@ -36,7 +36,7 @@ export const addCategory = createAsyncThunk(
   async (categoryName: string, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://server.megaproxy.us/api/v1/add-category",
+        `${apiBaseUrl}/add-category`,
         { name: categoryName }
       );
 

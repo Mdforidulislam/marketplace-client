@@ -40,21 +40,22 @@ const initialState: RegisterState = {
 export const registerUser = createAsyncThunk(
   "register/registerUser",
   async (formData: RegisterState["user"], { rejectWithValue }) => {
-    // console.log({user:formData});
+    console.log("BEFORE", formData);
     
     try {
-      const response = await axios.post(
-        "https://server.megaproxy.us/api/v1/create-user",
-        {user:formData}
-      );
-      // console.log(response.data);
+      const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+      const response = await axios.post(`${apiBaseUrl}/create-user`, { user: formData });
+      console.log("AFTER", response.data);
       
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data || "Registration failed.");
+      // Safely check for error response
+      const errorMessage = error?.response?.data || error.message || "Registration failed. Please try again.";
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
 
 const registerSlice = createSlice({
   name: "register",

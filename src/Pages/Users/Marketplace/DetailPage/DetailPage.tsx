@@ -21,6 +21,7 @@ import axios from "axios";
 import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPageSlice";
 import { refreshAccessToken } from "../../../../Redux/Features/User/authSlice";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -60,8 +61,8 @@ const DetailPage = () => {
     setLikeLoading(true);
   
     try {
-      const newLikeState = !isLiked;  // This toggles the state
-      await axios.put("https://server.megaproxy.us/api/v1/like-post", {
+      const newLikeState = !isLiked;
+      await axios.put(`${apiBaseUrl}/like-post`, {
         post: {
           postId: id,
           user_Id: userId,

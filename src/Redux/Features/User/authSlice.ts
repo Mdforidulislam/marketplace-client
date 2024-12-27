@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { decodedToken } from "../../../Utils/TokenDecode";
-
+const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 interface AuthState {
   isAuthenticated: boolean;
   userRole: string | null;
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        "https://server.megaproxy.us/api/v1/auth",
+        `${apiBaseUrl}/auth`,
         credentials,
         { withCredentials: true }
       );
@@ -72,7 +72,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axios.post(
-        "https://server.megaproxy.us/api/v1/logOut",
+        `${apiBaseUrl}/logOut`,
         {},
         { withCredentials: true }
       );
@@ -98,7 +98,7 @@ export const refreshAccessToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "https://server.megaproxy.us/api/v1/refresh-token",
+       `${apiBaseUrl}/refresh-token`,
         { withCredentials: true }
       );
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 
 // Define the interface for user data
 interface User {
@@ -55,9 +56,9 @@ export const fetchPostDetails = createAsyncThunk(
   async (postId: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `https://server.megaproxy.us/api/v1/get-single-post`,
+        `${apiBaseUrl}/get-single-post`,
         {
-          params: { id: postId }, 
+          params: { id: postId },
         }
       );
       // console.log("Response from backend:", response.data.data);

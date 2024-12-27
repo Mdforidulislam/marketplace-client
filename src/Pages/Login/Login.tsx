@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full h-screen p-4 bg-gray-100">
+    <div className="flex justify-center items-center w-full min-h-screen p-4 bg-gray-100">
       <Form
         onFinish={onFinish}
         name="login-form"

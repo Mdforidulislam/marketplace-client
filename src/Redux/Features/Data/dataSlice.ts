@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 
 interface DataItem {
   likes: any;
@@ -45,8 +46,7 @@ const initialState: DataState = {
 export const fetchData = createAsyncThunk<DataItem[]>(
   "data/fetchData",
   async () => {
-    const response = await axios.get("https://server.megaproxy.us/api/v1/get-all-post");
-    // console.log("response: ", response.data.data.data);
+    const response = await axios.get(`${apiBaseUrl}/get-all-post`);
     return response.data.data.data;
   }
 );
