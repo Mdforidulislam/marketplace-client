@@ -26,6 +26,7 @@ interface Post {
   _id: string;
   likesCount: number;
   productName: string;
+  productPrice: string;
   author_id: string;
   category: string;
   description: string;
@@ -55,12 +56,9 @@ export const fetchPostDetails = createAsyncThunk(
   "detailPage/fetchPostDetails",
   async (postId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${apiBaseUrl}/get-single-post`,
-        {
-          params: { id: postId },
-        }
-      );
+      const response = await axios.get(`${apiBaseUrl}/get-single-post`, {
+        params: { id: postId },
+      });
       // console.log("Response from backend:", response.data.data);
 
       return response.data.data;
@@ -103,6 +101,7 @@ const detailPageSlice = createSlice({
             description: data.description,
             image: data.image,
             author_id: data.author_id,
+            productPrice: data.productPrice,
           };
 
           state.userData = data.user_Name

@@ -5,18 +5,15 @@ import DetailPage from "../Pages/Users/Marketplace/DetailPage/DetailPage";
 import Marketplace from "../Pages/Users/Marketplace/Marketplace";
 import ProtectedRoute from "../PrivetRoutes/ProtectedRoute";
 
-const UserRoutes = [
+const Routes = [
   {
     path: "/",
     element: <Navigate to="/" replace={true} />,
   },
+  // User Routes
   {
     path: "/",
-    element: (
-      <ProtectedRoute>
-        <UserDashboard />
-      </ProtectedRoute>
-    ),
+    element: <UserDashboard />,
     children: [
       {
         index: true,
@@ -28,10 +25,14 @@ const UserRoutes = [
       },
       {
         path: "add-post",
-        element: <AddPost />,
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <AddPost />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
 ];
 
-export default UserRoutes;
+export default Routes;

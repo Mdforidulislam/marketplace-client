@@ -15,7 +15,7 @@ const AdminDashboard: React.FC = () => {
   const LogOutDispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const appPost = location.pathname === "/user";
+  const appPost = location.pathname === "/user" || location.pathname === "/";
 
   useEffect(() => {
     const handleResize = () => {

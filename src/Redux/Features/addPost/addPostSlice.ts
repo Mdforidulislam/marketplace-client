@@ -18,7 +18,7 @@ const initialState: AddPostState = {
 // Async thunk for adding a post
 export const addPost = createAsyncThunk(
     'post/addPost',
-    async (postData: { post: { author_id: string; productName: string; description: string; category: string; image: string | null } }, { rejectWithValue }) => {
+    async (postData: { post: { author_id: string; productName: string; description: string; category: string; productPrice: string; image: string | null } }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${apiBaseUrl}/create-post`, postData);
       console.log(response.data.data);

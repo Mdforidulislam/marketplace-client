@@ -22,6 +22,7 @@ import {
   addCategory,
   fetchCategories,
 } from "../../../Redux/Features/Tabs/TabsSlice";
+import { BiDollar } from "react-icons/bi";
 
 const { Option } = Select;
 
@@ -154,6 +155,7 @@ const AddPost = () => {
     description: string;
     category: string;
     image: string;
+    productPrice: string;
   }
 
   const onFinish = async (values: FormValues) => {
@@ -176,7 +178,7 @@ const AddPost = () => {
     const response = await dispatch(addPost(postData));
     if (response.meta.requestStatus === "fulfilled") {
       toast.success("Successfully Posted!");
-      navigate("/user");
+      navigate("/");
     } else {
       toast.error("Something went wrong!");
     }
@@ -237,6 +239,22 @@ const AddPost = () => {
           <Input
             className="md:min-w-[400px] min-w-72"
             placeholder="Product Name"
+          />
+        </Form.Item>
+
+        {/* Product Price */}
+        <Form.Item
+          className="w-full flex justify-center"
+          name="productPrice"
+          rules={[
+            { required: true, message: "Please input your product price!" },
+          ]}
+        >
+          <Input
+            type="number"
+            suffix={<BiDollar />}
+            className="md:min-w-[400px] min-w-72"
+            placeholder="Product price"
           />
         </Form.Item>
 

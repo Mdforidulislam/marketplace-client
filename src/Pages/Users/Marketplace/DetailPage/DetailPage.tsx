@@ -21,6 +21,8 @@ import axios from "axios";
 import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPageSlice";
 import { refreshAccessToken } from "../../../../Redux/Features/User/authSlice";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+import { BiDollar } from "react-icons/bi";
+
 const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
 
 const DetailPage = () => {
@@ -59,25 +61,25 @@ const DetailPage = () => {
   // Handle Like/Unlike Action
   const handleLike = async () => {
     setLikeLoading(true);
-  
+
     try {
       const newLikeState = !isLiked;
       await axios.put(`${apiBaseUrl}/like-post`, {
         post: {
           postId: id,
           user_Id: userId,
-          isLiked: newLikeState.toString(),  // Converting to string
+          isLiked: newLikeState.toString(), // Converting to string
         },
       });
-  
-      setIsLiked(newLikeState);  // Update the frontend state
+
+      setIsLiked(newLikeState); // Update the frontend state
     } catch (error) {
       console.error("Failed to like/unlike the post:", error);
     } finally {
       setLikeLoading(false);
     }
   };
-  
+
   const postId = id!;
   useEffect(() => {
     dispatch(fetchData());
@@ -227,6 +229,12 @@ const DetailPage = () => {
             {item.category}
           </Button>
           <h1 className="text-4xl font-bold">{postData?.productName}</h1>
+          <div className="flex justify-center items-center gap-2">
+            <div className="text-base font-bold">Price: </div>
+            <div className="text-green-600 font-bold text-base flex justify-center items-center">
+              {postData?.productPrice ? postData?.productPrice : 0} <BiDollar />
+            </div>
+          </div>
           <p className="text-base text-gray-700">{postData?.description}</p>
           <div className="flex justify-center items-center gap-2">
             {likeLoading ? (

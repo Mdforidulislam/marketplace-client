@@ -242,7 +242,7 @@ const UserDashboard: React.FC = () => {
       >
         {appPost && (
           <Header
-            className="fixed top-0 pl-0 h-auto overflow-hidden"
+            className="fixed top-0 pl-0 h-auto overflow-hidden px-[10%]"
             style={headerStyles}
           >
             <div className="flex justify-between items-center">
