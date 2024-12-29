@@ -1,16 +1,11 @@
-import { Navigate } from "react-router-dom";
 import Login from "../Pages/Login/Login";
-import ProtectedRouteAdmin from "../PrivetRoutes/ProtectedRoute";
 import UnAuthorized from "../Pages/Unauthorized/UnAuthorized";
 import AdminDashboardd from "../Dashboard/AdminDashboard/AdminDashobard";
 import AllUsers from "../Pages/Admin/AllUsers/AllUsers";
 import SignUp from "../Pages/SingIn/SignUp";
+import ProtectedRoute from "../PrivetRoutes/ProtectedRoute";
 
 const Adminroutes = [
-  {
-    path: "/",
-    element: <Navigate to="/login" replace={true} />,
-  },
   {
     path: "/login",
     element: <Login />,
@@ -26,15 +21,19 @@ const Adminroutes = [
   {
     path: "/admin",
     element: (
-      <ProtectedRouteAdmin requiredRole="admin">
+      <ProtectedRoute requiredRole="admin">
         <AdminDashboardd />
-      </ProtectedRouteAdmin>
+      </ProtectedRoute>
     ),
     children: [
       {
         index: true,
-        element: <AllUsers />,
-      }
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AllUsers />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ];

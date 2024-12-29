@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     if (loginUser.fulfilled.match(result)) {
       const { userRole } = result.payload;
       if (userRole === "user") {
-        navigate("/user");
+        navigate("/");
       } else if (userRole === "admin") {
         navigate("/admin");
       }
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full h-screen p-4 bg-gray-100">
+    <div className="flex justify-center items-center w-full min-h-screen p-4 bg-gray-100">
       <Form
         onFinish={onFinish}
         name="login-form"

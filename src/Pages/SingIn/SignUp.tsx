@@ -30,8 +30,6 @@ import { AppDispatch } from "../../Redux/app/store";
 import { FaTelegramPlane } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
-
-
 const validateMessages = {
   required: "${label} is required!",
   types: {
@@ -111,6 +109,7 @@ const SignUp: React.FC = () => {
   const onFinish = async (values: FormValues) => {
     dispatch(setLoading(true));
     customSetLoading(true);
+    console.log(values);
 
     try {
       await dispatch(registerUser(values)).unwrap();
@@ -125,14 +124,14 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full h-screen p-4 bg-gray-100">
+    <div className="flex justify-center items-center w-full min-h-screen p-4 bg-gray-100">
       <Form
         form={form}
         name="signin-form"
         onFinish={onFinish}
         style={{
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 450,
           backgroundColor: "white",
           padding: "2rem",
           borderRadius: "8px",
@@ -163,7 +162,10 @@ const SignUp: React.FC = () => {
           name="user_Address"
           rules={[{ required: true, message: "User address is required" }]}
         >
-          <Input prefix={<HiOutlineLocationMarker />} placeholder="Your Address *" />
+          <Input
+            prefix={<HiOutlineLocationMarker />}
+            placeholder="Your Address *"
+          />
         </Form.Item>
 
         <Form.Item

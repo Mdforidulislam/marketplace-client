@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 
 interface AddPostState {
   loading: boolean;
@@ -17,9 +18,9 @@ const initialState: AddPostState = {
 // Async thunk for adding a post
 export const addPost = createAsyncThunk(
     'post/addPost',
-    async (postData: { post: { author_id: string; productName: string; description: string; category: string; image: string | null } }, { rejectWithValue }) => {
+    async (postData: { post: { author_id: string; productName: string; description: string; category: string; productPrice: string; image: string | null } }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('https://server.megaproxy.us/api/v1/create-post', postData);
+      const response = await axios.post(`${apiBaseUrl}/create-post`, postData);
       console.log(response.data.data);
       return response.data.data;
     } catch (error: any) {

@@ -1,17 +1,19 @@
+import { Navigate } from "react-router-dom";
 import UserDashboard from "../Dashboard/UserDashoboard/UserDashboard";
 import AddPost from "../Pages/Users/AddPost/AddPost";
 import DetailPage from "../Pages/Users/Marketplace/DetailPage/DetailPage";
 import Marketplace from "../Pages/Users/Marketplace/Marketplace";
 import ProtectedRoute from "../PrivetRoutes/ProtectedRoute";
 
-const UserRoutes = [
+const Routes = [
   {
-    path: "/user",
-    element: (
-      <ProtectedRoute>
-        <UserDashboard />
-      </ProtectedRoute>
-    ),
+    path: "/",
+    element: <Navigate to="/" replace={true} />,
+  },
+  // User Routes
+  {
+    path: "/",
+    element: <UserDashboard />,
     children: [
       {
         index: true,
@@ -23,10 +25,14 @@ const UserRoutes = [
       },
       {
         path: "add-post",
-        element: <AddPost />,
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <AddPost />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
 ];
 
-export default UserRoutes;
+export default Routes;

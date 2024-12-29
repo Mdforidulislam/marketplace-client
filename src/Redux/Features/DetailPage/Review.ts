@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 
 interface Review {
   postId: string;
@@ -36,7 +37,7 @@ export const addOrUpdateReview = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        "https://server.megaproxy.us/api/v1/comment-post",
+        `${apiBaseUrl}/comment-post`,
         reviewData
       );
       return response.data.data;

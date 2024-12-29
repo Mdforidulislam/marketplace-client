@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 
 // Define the interface for user data
 interface User {
@@ -25,6 +26,7 @@ interface Post {
   _id: string;
   likesCount: number;
   productName: string;
+  productPrice: string;
   author_id: string;
   category: string;
   description: string;
@@ -54,12 +56,9 @@ export const fetchPostDetails = createAsyncThunk(
   "detailPage/fetchPostDetails",
   async (postId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `https://server.megaproxy.us/api/v1/get-single-post`,
-        {
-          params: { id: postId }, 
-        }
-      );
+      const response = await axios.get(`${apiBaseUrl}/get-single-post`, {
+        params: { id: postId },
+      });
       // console.log("Response from backend:", response.data.data);
 
       return response.data.data;
@@ -102,6 +101,7 @@ const detailPageSlice = createSlice({
             description: data.description,
             image: data.image,
             author_id: data.author_id,
+            productPrice: data.productPrice,
           };
 
           state.userData = data.user_Name
