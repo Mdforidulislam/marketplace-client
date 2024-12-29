@@ -4,15 +4,15 @@ import {
   Avatar,
   Badge,
   Button,
-  Descriptions,
-  DescriptionsProps,
+  ConfigProvider,
   Form,
   Rate,
+  Space,
   Spin,
   Tooltip,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { fetchData } from "../../../../Redux/Features/Data/dataSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Redux/hooks/hooks";
 import { AiOutlineLike } from "react-icons/ai";
@@ -22,10 +22,37 @@ import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPa
 import { refreshAccessToken } from "../../../../Redux/Features/User/authSlice";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { BiDollar } from "react-icons/bi";
-
+import { MailOutlined } from "@ant-design/icons";
+import { createStyles } from "antd-style";
 const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+const useStyle = createStyles(({ prefixCls, css }) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(
+        .${prefixCls}-btn-dangerous
+      ) {
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: "";
+        background: linear-gradient(135deg, #6253e1, #04befe);
+        position: absolute;
+        inset: -1px;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+  `,
+}));
 
 const DetailPage = () => {
+  const { styles } = useStyle();
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const userId = localStorage.getItem("userId") || null;
@@ -58,7 +85,6 @@ const DetailPage = () => {
     }
   }, [id, userId, item]);
 
-  // Handle Like/Unlike Action
   const handleLike = async () => {
     setLikeLoading(true);
 
@@ -68,11 +94,11 @@ const DetailPage = () => {
         post: {
           postId: id,
           user_Id: userId,
-          isLiked: newLikeState.toString(), // Converting to string
+          isLiked: newLikeState.toString(),
         },
       });
 
-      setIsLiked(newLikeState); // Update the frontend state
+      setIsLiked(newLikeState);
     } catch (error) {
       console.error("Failed to like/unlike the post:", error);
     } finally {
@@ -84,7 +110,7 @@ const DetailPage = () => {
   useEffect(() => {
     dispatch(fetchData());
     dispatch(fetchPostDetails(postId));
-  }, [dispatch, postId, isLiked]);
+  }, [dispatch, postId]);
 
   if (loading || reviewsLoading) {
     return (
@@ -128,64 +154,6 @@ const DetailPage = () => {
       console.error("Failed to add/update review: ", error);
     }
   };
-
-  const descriptionItems: DescriptionsProps["items"] = [
-    {
-      label: "Provider",
-      children: userData?.user_Name,
-    },
-    {
-      label: "Phone",
-      children: userData?.user_PhoneNumber,
-    },
-    {
-      label: "Address",
-      children: userData?.user_Address,
-    },
-    {
-      label: "Facebook",
-      children: (
-        <a
-          href={userData?.user_Facebook}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 w-1/4"
-        >
-          Link
-        </a>
-      ),
-    },
-    {
-      label: "Telegram",
-      children: (
-        <a
-          href={userData?.user_Telegram}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 w-1/4"
-        >
-          Link
-        </a>
-      ),
-    },
-    {
-      label: "WhatsApp",
-      children: (
-        <a
-          href={`https://wa.me/${userData?.user_WhatsApp}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 w-1/4"
-        >
-          Link
-        </a>
-      ),
-    },
-    {
-      label: "Likes",
-      children: postData?.likesCount,
-    },
-  ];
 
   return (
     <div className="max-w-[1240px] mx-auto px-1 pt-16">
@@ -236,7 +204,20 @@ const DetailPage = () => {
             </div>
           </div>
           <p className="text-base text-gray-700">{postData?.description}</p>
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-center items-center gap-4">
+            <ConfigProvider
+              button={{
+                className: styles.linearGradientButton,
+              }}
+            >
+              <Link to={`/contact/${id}`} className="w-full">
+                <Space>
+                  <Button type="primary" size="large" icon={<MailOutlined />}>
+                    Contact
+                  </Button>
+                </Space>
+              </Link>
+            </ConfigProvider>
             {likeLoading ? (
               <Spin size="small" />
             ) : isLiked ? (
@@ -260,19 +241,13 @@ const DetailPage = () => {
                 />
               </Tooltip>
             )}
+            <Badge
+              className="site-badge-count-109"
+              count={postData?.likesCount ? postData?.likesCount : 0}
+              style={{ backgroundColor: "#52c41a" }}
+            />
           </div>
         </div>
-      </div>
-
-      <div className="pr-1 mb-6">
-        <h1 className="text-2xl font-bold text-black/70 my-6">
-          Service provider information :
-        </h1>
-        <Descriptions
-          className="tableData tracking-wide capitalize"
-          bordered
-          items={descriptionItems}
-        />
       </div>
 
       <div className="pr-1 mb-20">
