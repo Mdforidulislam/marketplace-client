@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Layout } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../Redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks/hooks";
 import { BsShopWindow } from "react-icons/bs";
 import { TbLogout } from "react-icons/tb";
 import { clearAuth } from "../../Redux/Features/User/authSlice";
@@ -14,7 +14,9 @@ const AdminDashboard: React.FC = () => {
   const location = useLocation();
   const LogOutDispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const { userRole } = useAppSelector(
+    (state) => state.auth
+  );
   const appPost = location.pathname === "/user" || location.pathname === "/";
 
   useEffect(() => {
@@ -55,9 +57,9 @@ const AdminDashboard: React.FC = () => {
         } bg-white text-black`}
       >
         <HamburgerButton
-          userRole="Admin"
           sidebarOpen={sidebarOpen}
           toggleSidebar={toggleSidebar}
+          userRole={userRole!}
         />
 
         <div

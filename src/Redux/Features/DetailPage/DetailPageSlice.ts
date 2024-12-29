@@ -92,6 +92,7 @@ const detailPageSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           const { data } = action.payload;
+          console.log("Data from backend:", data);
 
           state.postData = {
             _id: data._id,

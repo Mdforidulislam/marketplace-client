@@ -4,6 +4,7 @@ import AddPost from "../Pages/Users/AddPost/AddPost";
 import DetailPage from "../Pages/Users/Marketplace/DetailPage/DetailPage";
 import Marketplace from "../Pages/Users/Marketplace/Marketplace";
 import ProtectedRoute from "../PrivetRoutes/ProtectedRoute";
+import Contact from "../Pages/Users/Marketplace/Contact/Contact";
 
 const Routes = [
   {
@@ -20,8 +21,20 @@ const Routes = [
         element: <Marketplace />,
       },
       {
+        path: "contact/:id",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <Contact />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "details/:id",
-        element: <DetailPage />,
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <DetailPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "add-post",
