@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 
 interface Category {
   id: string;

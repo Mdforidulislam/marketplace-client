@@ -23,7 +23,7 @@ import { refreshAccessToken } from "../../../../Redux/Features/User/authSlice";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { BiDollar } from "react-icons/bi";
 
-const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();

@@ -43,7 +43,7 @@ export const registerUser = createAsyncThunk(
     console.log("BEFORE", formData);
     
     try {
-      const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+      const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
       const response = await axios.post(`${apiBaseUrl}/create-user`, { user: formData });
       console.log("AFTER", response.data);
       

@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { decodedToken } from "../../../Utils/TokenDecode";
-const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
+const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
 interface AuthState {
   isAuthenticated: boolean;
   userRole: string | null;
