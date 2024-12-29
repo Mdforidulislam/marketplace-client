@@ -55,6 +55,7 @@ const AdminDashboard: React.FC = () => {
         } bg-white text-black`}
       >
         <HamburgerButton
+          userRole="Admin"
           sidebarOpen={sidebarOpen}
           toggleSidebar={toggleSidebar}
         />
