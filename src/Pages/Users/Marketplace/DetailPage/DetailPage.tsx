@@ -147,7 +147,7 @@ const DetailPage = () => {
 
     // console.log("Form submitted with values: ", review);
     try {
-      const result = await dispatch(addOrUpdateReview(review)).unwrap();
+         await dispatch(addOrUpdateReview(review)).unwrap();
       // console.log("Review added/updated successfully: ", result);
       dispatch(fetchData());
     } catch (error) {
