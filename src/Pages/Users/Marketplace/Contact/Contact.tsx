@@ -1,11 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../Redux/hooks/hooks";
 import { useEffect, useState } from "react";
 import { fetchPostDetails } from "../../../../Redux/Features/DetailPage/DetailPageSlice";
 import { RootState } from "../../../../Redux/app/store";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { MdOutlineSubtitles } from "react-icons/md";
 import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
 
 const Contact = () => {
   const dispatch = useAppDispatch();
@@ -13,32 +14,35 @@ const Contact = () => {
   const { userData } = useAppSelector((state) => state.detailPage);
   const { userEmail } = useAppSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState(false);
-
+  const apiBaseUrl = import.meta.env.VITE_LOCAL_BASE_URLL;
   const postId = id!;
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchPostDetails(postId));
   }, [dispatch, postId]);
 
-  const onFinish = async (values: {
-    subject: string;
-    message: string;
-    userEmail: string;
-    userDataEmail: string;
-  }) => {
-    const mail = {
-      ...values,
-      from: userEmail, 
-      to: userData?.user_Email, 
+  const onFinish = async (values: { subject: string; text: string }) => {
+    const emailInfo = {
+      send_email: userEmail,
+      receive_email: userData?.user_Email,
+      subject: values.subject,
+      text: values.text,
     };
 
-    console.log("mail object:", mail);
     setLoading(true);
 
     try {
-      // Simulating an API call or processing logic
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Message sent successfully");
+      const response = await axios.post(`${apiBaseUrl}/send-email`, {
+        emailInfo,
+      });
+
+      console.log("Email response:", response.data);
+      if (response.status === 200) {
+        message.success("Message sent successfully");
+        navigate(`/details/${postId}`);
+      } else {
+        message.error("Failed to send message");
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -68,7 +72,10 @@ const Contact = () => {
         }}
         className="min-w-[300px] md:min-w-[450px] "
       >
-        <h2 className="font-bold text-2xl" style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        <h2
+          className="font-bold text-2xl"
+          style={{ textAlign: "center", marginBottom: "1.5rem" }}
+        >
           Contact Form
         </h2>
 
@@ -85,7 +92,7 @@ const Contact = () => {
         </Form.Item>
 
         <Form.Item
-          name="message"
+          name="text"
           rules={[{ required: true, message: "Message is required" }]}
         >
           <TextArea placeholder="Your message..." rows={4} />

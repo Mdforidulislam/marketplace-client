@@ -51,7 +51,7 @@ const initialState: PostDetailsState = {
   error: null,
 };
 
-// Async thunk to fetch post details along with user data
+
 export const fetchPostDetails = createAsyncThunk(
   "detailPage/fetchPostDetails",
   async (postId: string, { rejectWithValue }) => {
