@@ -40,12 +40,12 @@ const initialState: RegisterState = {
 export const registerUser = createAsyncThunk(
   "register/registerUser",
   async (formData: RegisterState["user"], { rejectWithValue }) => {
-    console.log("BEFORE", formData);
+    // console.log("BEFORE", formData);
     
     try {
       const apiBaseUrl = import.meta.env.VITE_BASE_URL_production;
       const response = await axios.post(`${apiBaseUrl}/create-user`, { user: formData });
-      console.log("AFTER", response.data);
+      // console.log("AFTER", response.data);
       
       return response.data;
     } catch (error: any) {
@@ -112,3 +112,5 @@ const registerSlice = createSlice({
 export const { setRegister, clearRegister, setLoading, setError } = registerSlice.actions;
 
 export default registerSlice.reducer;
+
+

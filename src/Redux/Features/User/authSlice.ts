@@ -72,7 +72,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const accessToken = Cookies.get("accessToken");  
-      console.log(accessToken);
+      // console.log(accessToken);
       
       await axios.post(`${apiBaseUrl}/logOut`, {}, {
         withCredentials: true,

@@ -21,7 +21,7 @@ export const addPost = createAsyncThunk(
     async (postData: { post: { author_id: string; productName: string; description: string; category: string; productPrice: string; image: string | null } }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${apiBaseUrl}/create-post`, postData);
-      console.log(response.data.data);
+      // console.log(response.data.data);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to add post.');

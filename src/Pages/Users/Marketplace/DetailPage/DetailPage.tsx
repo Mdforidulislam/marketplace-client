@@ -63,10 +63,10 @@ const DetailPage = () => {
   const { postData, userData } = useAppSelector((state) => state.detailPage);
   const [likeLoading, setLikeLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  console.log("postData", postData);
+  // console.log("postData", postData);
 
   const item = items.find((item) => item._id === id);
-  console.log("item", item?.likes);
+  // console.log("item", item?.likes);
 
   useEffect(() => {
     dispatch(refreshAccessToken());
@@ -145,10 +145,10 @@ const DetailPage = () => {
       },
     };
 
-    console.log("Form submitted with values: ", review);
+    // console.log("Form submitted with values: ", review);
     try {
       const result = await dispatch(addOrUpdateReview(review)).unwrap();
-      console.log("Review added/updated successfully: ", result);
+      // console.log("Review added/updated successfully: ", result);
       dispatch(fetchData());
     } catch (error) {
       console.error("Failed to add/update review: ", error);
@@ -158,7 +158,7 @@ const DetailPage = () => {
   return (
     <div className="max-w-[1240px] mx-auto px-1 pt-16">
       <div className="flex flex-col md:flex-row md:gap-10 md:p-4 p-1 mb-6">
-        <div className="flex-1 max-h-96 max-w-96 overflow-hidden">
+        <div className="flex-1 max-h-96 max-w-96 overflow-hidden bg-[#F5F5F5]">
           <img
             src={postData?.image}
             alt={postData?.productName}
@@ -166,7 +166,7 @@ const DetailPage = () => {
           />
         </div>
 
-        <div className="flex-1 flex flex-col space-y-2 gap-2 justify-center items-start md:mt-0 mt-6">
+        <div className="flex-1 flex flex-col gap-3 justify-center items-start md:mt-0 mt-6">
           <div className="flex items-center justify-center gap-2">
             <Badge
               size="default"

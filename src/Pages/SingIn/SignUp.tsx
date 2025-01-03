@@ -109,7 +109,7 @@ const SignUp: React.FC = () => {
   const onFinish = async (values: FormValues) => {
     dispatch(setLoading(true));
     customSetLoading(true);
-    console.log(values);
+    // console.log(values);
 
     try {
       await dispatch(registerUser(values)).unwrap();

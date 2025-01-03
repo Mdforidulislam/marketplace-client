@@ -13,7 +13,7 @@ const Login: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log("isAuthenticated:", isAuthenticated, "userRole:", userRole);
+    // console.log("isAuthenticated:", isAuthenticated, "userRole:", userRole);
   }, [isAuthenticated, userRole, navigate]);
 
   const onFinish = async (values: { user_Email: string; user_Password: string }) => {

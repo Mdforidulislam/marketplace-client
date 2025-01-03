@@ -51,7 +51,7 @@ const initialState: PostDetailsState = {
   error: null,
 };
 
-// Async thunk to fetch post details along with user data
+
 export const fetchPostDetails = createAsyncThunk(
   "detailPage/fetchPostDetails",
   async (postId: string, { rejectWithValue }) => {
@@ -92,7 +92,7 @@ const detailPageSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           const { data } = action.payload;
-          console.log("Data from backend:", data);
+          // console.log("Data from backend:", data);
 
           state.postData = {
             _id: data._id,
