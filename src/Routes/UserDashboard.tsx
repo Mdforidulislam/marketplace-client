@@ -43,7 +43,7 @@ const Routes = [
             <AddPost />
           </ProtectedRoute>
         ),
-      },
+      }
     ],
   },
 ];

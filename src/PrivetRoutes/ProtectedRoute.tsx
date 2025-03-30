@@ -3,7 +3,6 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Redux/hooks/hooks";
 import { RootState } from "../Redux/app/store";
 
-
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: string;
